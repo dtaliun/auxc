@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../src/TextWriter.h"
+#include "../src/include/TextWriter.h"
 
 class TextWriterTest : public::testing::Test {
 protected:

@@ -1,6 +1,6 @@
 #include <array>
 #include <gtest/gtest.h>
-#include "../src/GzipReader.h"
+#include "../src/include/GzipReader.h"
 
 class GzipReaderTest : public::testing::Test {
 protected:
@@ -71,7 +71,6 @@ TEST_F(GzipReaderTest, OpenClose) {
 TEST_F(GzipReaderTest, Read) {
 	bool exception = false;
 	array<const char*, 3> examples = {"example_unix.gz", "example_windows.gz", "example_mac.gz"};
-
 
 	for (const auto& example : examples) {
 		exception = false;

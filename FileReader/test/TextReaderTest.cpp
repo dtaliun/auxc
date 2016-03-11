@@ -1,6 +1,6 @@
 #include <array>
 #include <gtest/gtest.h>
-#include "../src/TextReader.h"
+#include "../src/include/TextReader.h"
 
 class ReaderTestTest : public::testing::Test {
 protected:

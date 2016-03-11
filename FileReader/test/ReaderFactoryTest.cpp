@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../src/ReaderFactory.h"
+#include "../src/include/ReaderFactory.h"
 
 class ReaderFactoryTest : public::testing::Test {
 protected:

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../src/GzipWriter.h"
+#include "../src/include/GzipWriter.h"
 
 class GzipWriterTest : public::testing::Test {
 protected:

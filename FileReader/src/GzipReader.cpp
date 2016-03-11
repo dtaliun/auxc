@@ -1,4 +1,4 @@
-#include "GzipReader.h"
+#include "include/GzipReader.h"
 
 namespace sph_umich_edu {
 

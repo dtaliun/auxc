@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../src/CommandLine.h"
+#include "../src/include/CommandLine.h"
 
 class CommandLineTest : public::testing::Test {
 protected:
@@ -45,8 +45,8 @@ TEST_F(CommandLineTest, NoOptions) {
 
 	ASSERT_EQ(0u, commandLine.get_options_count());
 	ASSERT_FALSE(commandLine.is_option_specified("--help"));
-	ASSERT_EQ("", commandLine.get_argument("--help", 0u));
-	ASSERT_EQ("", commandLine.get_argument("--help", 1u));
+	ASSERT_THROW(commandLine.get_argument("--help", 0u), sph_umich_edu::CommandLineException);
+	ASSERT_THROW(commandLine.get_argument("--help", 1u), sph_umich_edu::CommandLineException);
 }
 
 TEST_F(CommandLineTest, OptionsNoArguments) {
@@ -62,10 +62,10 @@ TEST_F(CommandLineTest, OptionsNoArguments) {
 	ASSERT_TRUE(commandLine.is_option_specified("--version"));
 	ASSERT_EQ(0u, commandLine.get_arguments_count("--help"));
 	ASSERT_EQ(0u, commandLine.get_arguments_count("--version"));
-	ASSERT_EQ("", commandLine.get_argument("--help", 0u));
-	ASSERT_EQ("", commandLine.get_argument("--help", 1u));
-	ASSERT_EQ("", commandLine.get_argument("--version", 0u));
-	ASSERT_EQ("", commandLine.get_argument("--version", 1u));
+	ASSERT_THROW(commandLine.get_argument("--help", 0u), sph_umich_edu::CommandLineException);
+	ASSERT_THROW(commandLine.get_argument("--help", 1u), sph_umich_edu::CommandLineException);
+	ASSERT_THROW(commandLine.get_argument("--version", 0u), sph_umich_edu::CommandLineException);
+	ASSERT_THROW(commandLine.get_argument("--version", 1u), sph_umich_edu::CommandLineException);
 }
 
 TEST_F(CommandLineTest, OptionsWithArguments) {
@@ -80,10 +80,10 @@ TEST_F(CommandLineTest, OptionsWithArguments) {
 	ASSERT_EQ(1u, commandLine.get_arguments_count("--help"));
 	ASSERT_EQ(2u, commandLine.get_arguments_count("--version"));
 	ASSERT_EQ("arg1", commandLine.get_argument("--help", 0u));
-	ASSERT_EQ("", commandLine.get_argument("--help", 1u));
+	ASSERT_THROW(commandLine.get_argument("--help", 1u), sph_umich_edu::CommandLineException);
 	ASSERT_EQ("arg1", commandLine.get_argument("--version", 0u));
 	ASSERT_EQ("arg2", commandLine.get_argument("--version", 1u));
-	ASSERT_EQ("", commandLine.get_argument("--version", 2u));
+	ASSERT_THROW(commandLine.get_argument("--version", 2u), sph_umich_edu::CommandLineException);
 }
 
 TEST_F(CommandLineTest, UnkownOption) {
@@ -131,29 +131,17 @@ TEST_F(CommandLineTest, UnkownOption) {
 }
 
 TEST_F(CommandLineTest, DuplicatedOption) {
-	bool exception1 = false;
 	int argc1 = 4;
 	const char* argv1[] = {"program", "--help", "arg1", "--help"};
 	sph_umich_edu::CommandLine commandLine1;
 
-	try {
-		commandLine1.read_command_line(argc1, argv1);
-	} catch (std::exception& e) {
-		exception1 = true;
-	}
-	ASSERT_TRUE(exception1);
+	ASSERT_THROW(commandLine1.read_command_line(argc1, argv1), sph_umich_edu::DuplicatedOptionException);
 
-	bool exception2 = false;
 	int argc2 = 4;
 	const char* argv2[] = {"program", "--help", "--version", "--help"};
 	sph_umich_edu::CommandLine commandLine2;
 
-	try {
-		commandLine2.read_command_line(argc2, argv2);
-	} catch (std::exception& e) {
-		exception2 = true;
-	}
-	ASSERT_TRUE(exception2);
+	ASSERT_THROW(commandLine2.read_command_line(argc2, argv2), sph_umich_edu::DuplicatedOptionException);
 }
 
 

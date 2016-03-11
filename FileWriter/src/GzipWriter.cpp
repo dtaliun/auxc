@@ -1,4 +1,4 @@
-#include "GzipWriter.h"
+#include "include/GzipWriter.h"
 
 namespace sph_umich_edu {
 

@@ -1,4 +1,4 @@
-#include "CommandLineException.h"
+#include "include/CommandLineException.h"
 
 namespace sph_umich_edu {
 

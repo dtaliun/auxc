@@ -1,4 +1,4 @@
-#include "CommandLine.h"
+#include "include/CommandLine.h"
 
 namespace sph_umich_edu {
 
@@ -26,14 +26,15 @@ void CommandLine::add_option_to_dictionary(const string& option) throw (InvalidO
 	options_dictionary.insert(option);
 }
 
-bool CommandLine::is_option_in_dictionary(const string& option) {
+bool CommandLine::is_option_in_dictionary(const string& option) const {
 	return options_dictionary.count(option) > 0;
 }
 
 void CommandLine::read_command_line(int argc, const char* const* argv) throw (InvalidOptionException, UnknownOptionException, DuplicatedOptionException) {
 	initialize_options_dictionary();
 
-	options_it = options.end();
+	auto options_it = options.end();
+	auto options_dictionory_it = options_dictionary.end();
 
 	for (int arg = 1; arg < argc; ++arg) {
 		string value = argv[arg];
@@ -56,16 +57,16 @@ void CommandLine::read_command_line(int argc, const char* const* argv) throw (In
 	}
 }
 
-unsigned int CommandLine::get_options_count() {
+unsigned int CommandLine::get_options_count() const {
 	return options.size();
 }
 
-bool CommandLine::is_option_specified(const string& option) {
+bool CommandLine::is_option_specified(const string& option) const {
 	return options.count(option) > 0;
 }
 
-unsigned int CommandLine::get_arguments_count(const string& option) {
-	options_it = options.find(option);
+unsigned int CommandLine::get_arguments_count(const string& option) const {
+	auto options_it = options.find(option);
 	if (options_it != options.end()) {
 		return options_it->second.size();
 	}
@@ -73,15 +74,17 @@ unsigned int CommandLine::get_arguments_count(const string& option) {
 	return 0u;
 }
 
-string CommandLine::get_argument(const string& option, unsigned int pos) {
-	options_it = options.find(option);
-	if (options_it != options.end()) {
-		if (pos < options_it->second.size()) {
-			return options_it->second[pos];
-		}
+const string& CommandLine::get_argument(const string& option, unsigned int pos) const throw (CommandLineException) {
+	auto options_it = options.find(option);
+	if (options_it == options.end()) {
+		throw CommandLineException(__FILE__, __FUNCTION__, __LINE__, "Option not found.");
 	}
 
-	return "";
+	if (pos >= options_it->second.size()) {
+		throw CommandLineException(__FILE__, __FUNCTION__, __LINE__, "No argument at specified position.");
+	}
+
+	return options_it->second[pos];
 }
 
 }

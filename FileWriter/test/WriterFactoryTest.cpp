@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../src/WriterFactory.h"
+#include "../src/include/WriterFactory.h"
 
 class WriterFactoryTest : public::testing::Test {
 protected:
