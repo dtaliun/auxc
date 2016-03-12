@@ -17,7 +17,7 @@ void Variant::add_sample(const string& sample) throw (VCFException) {
 	}
 	unsigned int index = samples.size();
 	samples.emplace(sample, index);
-	genotypes.emplace_back(new GenotypeField);
+	genotypes.emplace_back(new GenotypeField(format));
 }
 
 void Variant::add_sample(string&& sample) throw (VCFException) {
@@ -26,7 +26,7 @@ void Variant::add_sample(string&& sample) throw (VCFException) {
 	}
 	unsigned int index = samples.size();
 	samples.emplace(std::move(sample), index);
-	genotypes.emplace_back(new GenotypeField());
+	genotypes.emplace_back(new GenotypeField(format));
 }
 
 void Variant::parse(const char* text_start, const char* text_end) throw (VCFException) {
@@ -58,6 +58,49 @@ void Variant::parse(const char* text_start, const char* text_end) throw (VCFExce
 				break;
 			case 7u:
 				info.parse(*fields_iter);
+				break;
+			case 8u:
+				format.parse(*fields_iter);
+				break;
+			default:
+				try {
+					genotypes.at(i - 9u)->parse(*fields_iter);
+				} catch (std::out_of_range &e) {
+					throw VCFException(__FILE__, __FUNCTION__, __LINE__, "Number of genotype fields does not match number of samples.");
+				}
+				break;
+		}
+		++fields_iter;
+		++i;
+	}
+}
+
+void Variant::parse_minimal(const char* text_start, const char* text_end) throw (VCFException) {
+	unsigned int i = 0u;
+	const cregex_token_iterator end;
+	cregex_token_iterator fields_iter(text_start, text_end, field_split_regex, -1);
+	while (fields_iter != end) {
+		switch (i) {
+			case 0u:
+				chrom.parse(*fields_iter);
+				break;
+			case 1u:
+				pos.parse(*fields_iter);
+				break;
+			case 2u:
+				break;
+			case 3u:
+				ref.parse(*fields_iter);
+				break;
+			case 4u:
+				alt.parse(*fields_iter);
+				break;
+			case 5u:
+				break;
+			case 6u:
+				filter.parse(*fields_iter);
+				break;
+			case 7u:
 				break;
 			case 8u:
 				format.parse(*fields_iter);

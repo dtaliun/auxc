@@ -49,6 +49,7 @@ public:
 	void add_sample(string&& sample) throw (VCFException);
 
 	void parse(const char* start, const char* end) throw (VCFException);
+	void parse_minimal(const char* start, const char* end) throw (VCFException);
 
 	unsigned int get_n_samples() const;
 	bool has_sample(const string& sample) const;

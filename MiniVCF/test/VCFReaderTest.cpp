@@ -745,7 +745,8 @@ TEST_F(VCFReaderTest, GenotypeField) {
 	regex any_regex("(.*)");
 	cmatch matches;
 
-	sph_umich_edu::GenotypeField field;
+	sph_umich_edu::FormatField format;
+	sph_umich_edu::GenotypeField field(format);
 
 	ASSERT_TRUE(regex_match("", matches, any_regex));
 	ASSERT_EQ(2u, matches.size());
@@ -806,6 +807,90 @@ TEST_F(VCFReaderTest, GenotypeField) {
 	ASSERT_EQ(2u, matches.size());
 	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
+
+	ASSERT_TRUE(regex_match("GT:DP", matches, any_regex));
+	ASSERT_EQ(2u, matches.size());
+	ASSERT_NO_THROW(format.parse(matches[1]));
+	ASSERT_TRUE(format.has_genotypes());
+
+	ASSERT_TRUE(regex_match(".:255", matches, any_regex));
+	ASSERT_EQ(2u, matches.size());
+	ASSERT_NO_THROW(field.parse(matches[1]));
+	ASSERT_TRUE(field.has_genotypes());
+	ASSERT_TRUE(field.is_phased());
+	ASSERT_TRUE(field.has_missing_alleles());
+	ASSERT_EQ(0u, field.get_alleles().size());
+
+	ASSERT_TRUE(regex_match("./.:255", matches, any_regex));
+	ASSERT_EQ(2u, matches.size());
+	ASSERT_NO_THROW(field.parse(matches[1]));
+	ASSERT_TRUE(field.has_genotypes());
+	ASSERT_FALSE(field.is_phased());
+	ASSERT_TRUE(field.has_missing_alleles());
+	ASSERT_EQ(0u, field.get_alleles().size());
+
+	ASSERT_TRUE(regex_match(".|.:255", matches, any_regex));
+	ASSERT_EQ(2u, matches.size());
+	ASSERT_NO_THROW(field.parse(matches[1]));
+	ASSERT_TRUE(field.has_genotypes());
+	ASSERT_TRUE(field.is_phased());
+	ASSERT_TRUE(field.has_missing_alleles());
+	ASSERT_EQ(0u, field.get_alleles().size());
+
+	ASSERT_TRUE(regex_match("12:255", matches, any_regex));
+	ASSERT_EQ(2u, matches.size());
+	ASSERT_NO_THROW(field.parse(matches[1]));
+	ASSERT_TRUE(field.has_genotypes());
+	ASSERT_TRUE(field.is_phased());
+	ASSERT_FALSE(field.has_missing_alleles());
+	ASSERT_EQ(1u, field.get_alleles().size());
+	ASSERT_EQ(12u, field.get_alleles().at(0u));
+
+	ASSERT_TRUE(regex_match("0/11:255", matches, any_regex));
+	ASSERT_EQ(2u, matches.size());
+	ASSERT_NO_THROW(field.parse(matches[1]));
+	ASSERT_TRUE(field.has_genotypes());
+	ASSERT_FALSE(field.is_phased());
+	ASSERT_FALSE(field.has_missing_alleles());
+	ASSERT_EQ(2u, field.get_alleles().size());
+	ASSERT_EQ(0u, field.get_alleles().at(0u));
+	ASSERT_EQ(11u, field.get_alleles().at(1u));
+
+	ASSERT_TRUE(regex_match("11|0:255", matches, any_regex));
+	ASSERT_EQ(2u, matches.size());
+	ASSERT_NO_THROW(field.parse(matches[1]));
+	ASSERT_TRUE(field.has_genotypes());
+	ASSERT_TRUE(field.is_phased());
+	ASSERT_FALSE(field.has_missing_alleles());
+	ASSERT_EQ(2u, field.get_alleles().size());
+	ASSERT_EQ(11u, field.get_alleles().at(0u));
+	ASSERT_EQ(0u, field.get_alleles().at(1u));
+
+	ASSERT_TRUE(regex_match("0/1/2:255", matches, any_regex));
+	ASSERT_EQ(2u, matches.size());
+	ASSERT_NO_THROW(field.parse(matches[1]));
+	ASSERT_TRUE(field.has_genotypes());
+	ASSERT_FALSE(field.is_phased());
+	ASSERT_FALSE(field.has_missing_alleles());
+	ASSERT_EQ(3u, field.get_alleles().size());
+	ASSERT_EQ(0u, field.get_alleles().at(0u));
+	ASSERT_EQ(1u, field.get_alleles().at(1u));
+	ASSERT_EQ(2u, field.get_alleles().at(2u));
+
+	ASSERT_TRUE(regex_match("0|1|2:255", matches, any_regex));
+	ASSERT_EQ(2u, matches.size());
+	ASSERT_NO_THROW(field.parse(matches[1]));
+	ASSERT_TRUE(field.has_genotypes());
+	ASSERT_TRUE(field.is_phased());
+	ASSERT_FALSE(field.has_missing_alleles());
+	ASSERT_EQ(3u, field.get_alleles().size());
+	ASSERT_EQ(0u, field.get_alleles().at(0u));
+	ASSERT_EQ(1u, field.get_alleles().at(1u));
+	ASSERT_EQ(2u, field.get_alleles().at(2u));
+
+	ASSERT_TRUE(regex_match(".|0:255", matches, any_regex));
+	ASSERT_EQ(2u, matches.size());
+	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
 }
 
 TEST_F(VCFReaderTest, MetaTest) {
@@ -927,7 +1012,6 @@ TEST_F(VCFReaderTest, TestGZVCF) {
 	bool has_next = false;
 
 	vcf.open("valid-4.1.vcf.gz");
-
 	for (unsigned int variant = 0u; variant < 12u; ++variant) {
 		has_next = false;
 		if ((variant == 5) || (variant == 6) || (variant == 7) || (variant == 9) || (variant == 10)) {
@@ -939,7 +1023,6 @@ TEST_F(VCFReaderTest, TestGZVCF) {
 		}
 	}
 	ASSERT_FALSE(vcf.read_next_variant());
-
 	vcf.close();
 }
 
