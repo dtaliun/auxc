@@ -46,15 +46,11 @@ TEST_F(ReaderFactoryTest, Factory) {
 	try {
 		unique_ptr<sph_umich_edu::Reader> reader(nullptr);
 
-		reader = sph_umich_edu::ReaderFactory::create(sph_umich_edu::ReaderFactory::GZIP);
+		reader = sph_umich_edu::ReaderFactory::create(sph_umich_edu::ReaderFactory::READER_TYPE::GZIP);
 		ASSERT_NE(nullptr, dynamic_cast<sph_umich_edu::GzipReader*>(reader.get()));
 		ASSERT_EQ(nullptr, dynamic_cast<sph_umich_edu::TextReader*>(reader.get()));
 
-		reader = sph_umich_edu::ReaderFactory::create(sph_umich_edu::ReaderFactory::TEXT);
-		ASSERT_NE(nullptr, dynamic_cast<sph_umich_edu::TextReader*>(reader.get()));
-		ASSERT_EQ(nullptr, dynamic_cast<sph_umich_edu::GzipReader*>(reader.get()));
-
-		reader = sph_umich_edu::ReaderFactory::create("");
+		reader = sph_umich_edu::ReaderFactory::create(sph_umich_edu::ReaderFactory::READER_TYPE::TEXT);
 		ASSERT_NE(nullptr, dynamic_cast<sph_umich_edu::TextReader*>(reader.get()));
 		ASSERT_EQ(nullptr, dynamic_cast<sph_umich_edu::GzipReader*>(reader.get()));
 	} catch (sph_umich_edu::ReaderCreateException& e) {

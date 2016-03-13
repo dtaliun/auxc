@@ -24,7 +24,7 @@ void VCFReader::open(const string& name) throw (ReaderException, VCFException) {
 void VCFReader::open(const char* name) throw (ReaderException, VCFException) {
 	if (reader == nullptr) {
 		this->name = name;
-		reader = ReaderFactory::create(ReaderFactory::is_gzip(this->name) == true ? ReaderFactory::GZIP : ReaderFactory::TEXT);
+		reader = ReaderFactory::create(ReaderFactory::is_gzip(this->name) == true ? ReaderFactory::READER_TYPE::GZIP : ReaderFactory::READER_TYPE::TEXT);
 		reader->set_file_name(this->name);
 		reader->open();
 		read_metas();

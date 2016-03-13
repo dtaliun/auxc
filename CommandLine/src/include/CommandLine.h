@@ -21,9 +21,7 @@ protected:
 	regex option_regex;
 
 	unordered_set<string> options_dictionary;
-//	unordered_set<string>::iterator options_dictionory_it;
 	unordered_map<string, vector<string>> options;
-//	unordered_map<string, vector<string>>::iterator options_it;
 
 	virtual void initialize_options_dictionary();
 

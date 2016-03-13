@@ -19,15 +19,11 @@ TEST_F(WriterFactoryTest, Factory) {
 	try {
 		unique_ptr<sph_umich_edu::Writer> writer(nullptr);
 
-		writer = sph_umich_edu::WriterFactory::create(sph_umich_edu::WriterFactory::GZIP);
+		writer = sph_umich_edu::WriterFactory::create(sph_umich_edu::WriterFactory::WRITER_TYPE::GZIP);
 		ASSERT_NE(nullptr, dynamic_cast<sph_umich_edu::GzipWriter*>(writer.get()));
 		ASSERT_EQ(nullptr, dynamic_cast<sph_umich_edu::TextWriter*>(writer.get()));
 
-		writer = sph_umich_edu::WriterFactory::create(sph_umich_edu::WriterFactory::TEXT);
-		ASSERT_NE(nullptr, dynamic_cast<sph_umich_edu::TextWriter*>(writer.get()));
-		ASSERT_EQ(nullptr, dynamic_cast<sph_umich_edu::GzipWriter*>(writer.get()));
-
-		writer = sph_umich_edu::WriterFactory::create("");
+		writer = sph_umich_edu::WriterFactory::create(sph_umich_edu::WriterFactory::WRITER_TYPE::TEXT);
 		ASSERT_NE(nullptr, dynamic_cast<sph_umich_edu::TextWriter*>(writer.get()));
 		ASSERT_EQ(nullptr, dynamic_cast<sph_umich_edu::GzipWriter*>(writer.get()));
 	} catch (sph_umich_edu::WriterCreateException& e) {

@@ -2,9 +2,6 @@
 
 namespace sph_umich_edu {
 
-const string ReaderFactory::TEXT = "TEXT";
-const string ReaderFactory::GZIP = "GZIP";
-
 ReaderFactory::ReaderFactory() {
 
 }
@@ -40,8 +37,8 @@ bool ReaderFactory::is_gzip(const string& file_name) throw (ReaderException) {
 	return false;
 }
 
-unique_ptr<Reader> ReaderFactory::create(const string& type) throw (ReaderCreateException) {
-	if (type.compare(GZIP) == 0) {
+unique_ptr<Reader> ReaderFactory::create(READER_TYPE type) throw (ReaderCreateException) {
+	if (type == READER_TYPE::GZIP) {
 		return unique_ptr<Reader>(new GzipReader());
 	}
 

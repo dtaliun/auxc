@@ -18,12 +18,13 @@ private:
 	ReaderFactory();
 
 public:
-	static const string TEXT;
-	static const string GZIP;
+	enum class READER_TYPE {
+		TEXT, GZIP
+	};
 
 	virtual ~ReaderFactory();
 
-	static unique_ptr<Reader> create(const string& type) throw (ReaderCreateException);
+	static unique_ptr<Reader> create(READER_TYPE type) throw (ReaderCreateException);
 	static bool is_gzip(const string& file_name) throw (ReaderException);
 };
 

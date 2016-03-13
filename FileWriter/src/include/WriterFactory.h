@@ -16,12 +16,13 @@ private:
 	WriterFactory();
 
 public:
-	static const string TEXT;
-	static const string GZIP;
+	enum class WRITER_TYPE {
+		TEXT, GZIP
+	};
 
 	virtual ~WriterFactory();
 
-	static unique_ptr<Writer> create(const string& type) throw (WriterCreateException);
+	static unique_ptr<Writer> create(WRITER_TYPE type) throw (WriterCreateException);
 };
 
 }
