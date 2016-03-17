@@ -1,6 +1,7 @@
 #include <array>
 #include <gtest/gtest.h>
 #include <cmath>
+#include <chrono>
 #include "../src/include/VCFReader.h"
 
 class VCFReaderTest : public::testing::Test {
@@ -123,7 +124,6 @@ TEST_F(VCFReaderTest, IdField) {
 	ASSERT_EQ(2u, field.get_values().size());
 	ASSERT_EQ("rs123", field.get_values().at(0u));
 	ASSERT_EQ("rs892", field.get_values().at(1u));
-
 
 	ASSERT_TRUE(regex_match(".", matches, any_regex));
 	ASSERT_EQ(2u, matches.size());
@@ -293,6 +293,14 @@ TEST_F(VCFReaderTest, AltField) {
 	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_EQ(0u, field.get_values().size());
+
+	ASSERT_TRUE(regex_match("<CN0>,<CN2>", matches, any_regex));
+	ASSERT_EQ(2u, matches.size());
+	ASSERT_NO_THROW(field.parse(matches[1]));
+	ASSERT_FALSE(field.is_empty());
+	ASSERT_EQ(2u, field.get_values().size());
+	ASSERT_EQ("<CN0>", field.get_values().at(0u));
+	ASSERT_EQ("<CN2>", field.get_values().at(01));
 }
 
 TEST_F(VCFReaderTest, QualField) {
@@ -1032,6 +1040,31 @@ TEST_F(VCFReaderTest, TestGZVCF) {
 		}
 	}
 	ASSERT_FALSE(vcf.read_next_variant());
+	vcf.close();
+}
+
+TEST_F(VCFReaderTest, Test1000GenomesSample) {
+	sph_umich_edu::VCFReader vcf;
+	std::chrono::time_point<std::chrono::system_clock> start, end;
+	unsigned int count = 0u;
+
+	vcf.open("1000G_phase3.EUR.chr20.100K.vcf.gz");
+	ASSERT_EQ(503u, vcf.get_variant().get_n_samples());
+
+	start = std::chrono::system_clock::now();
+	while (vcf.read_next_variant()) {
+		++count;
+	}
+	end = std::chrono::system_clock::now();
+
+	std::chrono::duration<double> elapsed_seconds = end - start;
+
+	GTEST_LOG_(INFO) << "Number of variants = " << count;
+	GTEST_LOG_(INFO) << "Elapsed = " << elapsed_seconds.count() << " sec";
+	GTEST_LOG_(INFO) << "Speed = " << (count / elapsed_seconds.count()) << " variants/sec";
+
+	ASSERT_EQ(100000u, count);
+
 	vcf.close();
 }
 

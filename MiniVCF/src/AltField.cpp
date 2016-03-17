@@ -4,7 +4,7 @@ namespace sph_umich_edu {
 
 AltField::AltField() :
 		empty_alt_regex("^\\.$"),
-		id_alt_regex("^<[^\\s,<>]+>$"),
+		id_alt_regex("<[^\\s,<>]+>(,<[^\\s,<>]+>)*"),
 		alt_regex("[acgtnACGTN\\*]+(,[acgtnACGTN\\*]+)*"),
 		alt_split_regex(","),
 		empty(true) {
@@ -24,9 +24,7 @@ void AltField::parse(const csub_match& text) throw (VCFException) {
 		return;
 	}
 
-	if (regex_match(this->text, id_alt_regex)) {
-		values.emplace_back(this->text);
-	} else if (regex_match(this->text, alt_regex)) {
+	if (regex_match(this->text, alt_regex) || regex_match(this->text, id_alt_regex)) {
 		const sregex_token_iterator end;
 		sregex_token_iterator fields_iter(this->text.begin(), this->text.end(), alt_split_regex, -1);
 		while (fields_iter != end) {
