@@ -445,7 +445,7 @@ TEST_F(VCFReaderTest, InfoField) {
 
 	ASSERT_TRUE(regex_match(".", matches, any_regex));
 	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	ASSERT_NO_THROW(field.parse(matches[1]));
 	ASSERT_EQ(0u, field.get_values().size());
 
 	ASSERT_TRUE(regex_match("H2", matches, any_regex));

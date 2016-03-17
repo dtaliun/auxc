@@ -3,6 +3,7 @@
 namespace sph_umich_edu {
 
 InfoField::InfoField():
+	empty_info_regex("\\."),
 	info_keyvalue_regex("([\\.]*[a-zA-Z0-9_][a-zA-Z0-9_\\.]*)(?:=([^=;,[:space:]]+(?:,[^=;,[:space:]]+)*))?"),
 	info_split_regex(";") {
 }
@@ -14,6 +15,10 @@ InfoField::~InfoField() {
 void InfoField::parse(const csub_match& text) throw (VCFException) {
 	values.clear();
 	this->text = std::move(text.str());
+
+	if (regex_match(this->text, empty_info_regex)) {
+		return;
+	}
 
 	const sregex_token_iterator end;
 	smatch matches;

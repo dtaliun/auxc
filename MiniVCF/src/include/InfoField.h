@@ -15,6 +15,7 @@ class InfoField: public Field {
 private:
 	string text;
 
+	regex empty_info_regex;
 	regex info_keyvalue_regex;
 	regex info_split_regex;
 
