@@ -54,6 +54,7 @@ public:
 	unsigned int get_n_samples() const;
 	bool has_sample(const string& sample) const;
 	long int get_sample_index(const string& sample) const;
+	vector<string> get_samples() const;
 	const ChromField& get_chrom() const;
 	const PosField& get_pos() const;
 	const IdField& get_id() const;

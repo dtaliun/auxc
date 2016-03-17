@@ -1011,7 +1011,16 @@ TEST_F(VCFReaderTest, TestGZVCF) {
 	sph_umich_edu::VCFReader vcf;
 	bool has_next = false;
 
+	vector<string> vcf_samples{"NA00001", "NA00002", "NA00003"};
+
 	vcf.open("valid-4.1.vcf.gz");
+
+	vector<string> read_vcf_samples = std::move(vcf.get_variant().get_samples());
+	ASSERT_EQ(vcf_samples.size(), read_vcf_samples.size());
+	for (unsigned int i = 0u; i < vcf_samples.size(); ++i) {
+		ASSERT_EQ(vcf_samples[i], read_vcf_samples[i]);
+	}
+
 	for (unsigned int variant = 0u; variant < 12u; ++variant) {
 		has_next = false;
 		if ((variant == 5) || (variant == 6) || (variant == 7) || (variant == 9) || (variant == 10)) {

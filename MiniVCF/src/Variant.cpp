@@ -135,6 +135,16 @@ long int Variant::get_sample_index(const string& sample) const {
 	}
 }
 
+vector<string> Variant::get_samples() const {
+	vector<string> samples(this->samples.size(), "");
+
+	for (auto&& entry : this->samples) {
+		samples.at(entry.second) = entry.first;
+	}
+
+	return samples;
+}
+
 const ChromField& Variant::get_chrom() const {
 	return chrom;
 }
