@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cctype>
 
 #include "FormatField.h"
 
@@ -15,11 +16,8 @@ class GenotypeField: public Field {
 private:
 	string text;
 
-	regex genotype_regex;
-	regex genotype_split_regex;
-	regex missing_alleles_regex;
-	regex alleles_regex;
-	regex alleles_split_regex;
+	const char* token_start;
+	const char* token_end;
 
 	const FormatField& format;
 
@@ -29,11 +27,16 @@ private:
 	bool missing_alleles;
 	vector<unsigned int> alleles;
 
+	const sregex_token_iterator send;
+
 public:
 	GenotypeField(const FormatField& format);
 	virtual ~GenotypeField();
 
-	virtual void parse(const csub_match& text) throw (VCFException);
+	static long long unsigned int toul_nocheck(const char* start, const char* end);
+
+	virtual void parse(const char* start, const char* end) throw (VCFException);
+
 	virtual void print() const;
 
 	const vector<string>& get_values() const;

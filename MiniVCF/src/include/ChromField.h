@@ -22,7 +22,8 @@ public:
 	ChromField();
 	virtual ~ChromField();
 
-	virtual void parse(const csub_match& text) throw (VCFException);
+	virtual void parse(const char* start, const char* end) throw (VCFException);
+
 	virtual void print() const;
 
 	const string& get_value() const;

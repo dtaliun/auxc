@@ -14,20 +14,20 @@ QualField::~QualField() {
 
 }
 
-void QualField::parse(const csub_match& text) throw (VCFException) {
+void QualField::parse(const char* start, const char* end) throw (VCFException) {
 	empty = true;
-	this->text = std::move(text.str());
+	text.assign(start, end);
 
-	if (regex_match(this->text, empty_qual_regex)) {
+	if (regex_match(text, empty_qual_regex)) {
 		value = numeric_limits<double>::quiet_NaN();
 		return;
 	}
 
-	if (!regex_match(this->text, qual_regex)) {
+	if (!regex_match(text, qual_regex)) {
 		throw VCFException(__FILE__, __FUNCTION__, __LINE__, "Error while parsing QUAL field.");
 	}
 
-	value = stod(this->text, nullptr);
+	value = stod(text, nullptr);
 	empty = false;
 }
 

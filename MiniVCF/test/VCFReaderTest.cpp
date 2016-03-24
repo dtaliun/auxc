@@ -17,286 +17,250 @@ protected:
 };
 
 TEST_F(VCFReaderTest, ChromField) {
-	regex any_regex("(.*)");
-	cmatch matches;
-
+	const char* value = nullptr;
 	sph_umich_edu::ChromField field;
 
-	ASSERT_TRUE(regex_match("", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
+	ASSERT_EQ("", field.get_value());
 
-	ASSERT_TRUE(regex_match("20", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "20";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
+	ASSERT_EQ(value, field.get_value());
 
-	ASSERT_TRUE(regex_match("X", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "X";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
+	ASSERT_EQ(value, field.get_value());
 
-	ASSERT_TRUE(regex_match("chr-20", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "chr-20";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
+	ASSERT_EQ(value, field.get_value());
 
-	ASSERT_TRUE(regex_match("chr_20", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "chr_20";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
+	ASSERT_EQ(value, field.get_value());
 
-	ASSERT_TRUE(regex_match("chr:20", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "chr:20";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
+	ASSERT_EQ("", field.get_value());
 
-	ASSERT_TRUE(regex_match("<20>", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "<20>";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
+	ASSERT_EQ(value, field.get_value());
 
-	ASSERT_TRUE(regex_match("chr<20>", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "chr<20>";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
+	ASSERT_EQ("", field.get_value());
 
-	ASSERT_TRUE(regex_match(".", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = ".";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
+	ASSERT_EQ("", field.get_value());
 }
 
 TEST_F(VCFReaderTest, PosField) {
-	regex any_regex("(.*)");
-	cmatch matches;
-
+	const char* value = nullptr;
 	sph_umich_edu::PosField field;
 
-	ASSERT_TRUE(regex_match("", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
+	ASSERT_EQ(std::numeric_limits<long long unsigned int>::min(), field.get_value());
 
-	ASSERT_TRUE(regex_match("0", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "0";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
+	ASSERT_EQ(0ul, field.get_value());
 
-	ASSERT_TRUE(regex_match("1", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "1";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
+	ASSERT_EQ(1ul, field.get_value());
 
-	ASSERT_TRUE(regex_match("1000", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "1000";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
+	ASSERT_EQ(1000ul, field.get_value());
 
-	ASSERT_TRUE(regex_match("1099", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "1099";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
+	ASSERT_EQ(1099ul, field.get_value());
 
-	ASSERT_TRUE(regex_match("-1099", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "-1099";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
+	ASSERT_EQ(std::numeric_limits<long long unsigned int>::min(), field.get_value());
 
-	ASSERT_TRUE(regex_match("00", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "00";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
+	ASSERT_EQ(std::numeric_limits<long long unsigned int>::min(), field.get_value());
 
-	ASSERT_TRUE(regex_match(".", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = ".";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
+	ASSERT_EQ(std::numeric_limits<long long unsigned int>::min(), field.get_value());
 }
 
 TEST_F(VCFReaderTest, IdField) {
-	regex any_regex("(.*)");
-	cmatch matches;
-
+	const char* value = nullptr;
 	sph_umich_edu::IdField field;
 
-	ASSERT_TRUE(regex_match("", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("rs123", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "rs123";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_FALSE(field.is_empty());
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ("rs123", field.get_values().at(0u));
 
-	ASSERT_TRUE(regex_match("rs123;rs892", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "rs123;rs892";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_FALSE(field.is_empty());
 	ASSERT_EQ(2u, field.get_values().size());
 	ASSERT_EQ("rs123", field.get_values().at(0u));
 	ASSERT_EQ("rs892", field.get_values().at(1u));
 
-	ASSERT_TRUE(regex_match(".", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = ".";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("..", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "..";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("rs123; rs892", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "rs123; rs892";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("chr20:123", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "chr20:123";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_FALSE(field.is_empty());
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ("chr20:123", field.get_values().at(0u));
 
-	ASSERT_TRUE(regex_match("rs123,rs892", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "rs123,rs892";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("rs123;;rs892", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "rs123;;rs892";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_EQ(0u, field.get_values().size());
 }
 
 TEST_F(VCFReaderTest, RefField) {
-	regex any_regex("(.*)");
-	cmatch matches;
-
+	const char* value = nullptr;
 	sph_umich_edu::RefField field;
 
-	ASSERT_TRUE(regex_match("", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
+	ASSERT_EQ("", field.get_value());
 
-	ASSERT_TRUE(regex_match("A", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
-	ASSERT_EQ("A", field.get_value());
+	value = "A";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
+	ASSERT_EQ(value, field.get_value());
 
-	ASSERT_TRUE(regex_match("AnNTNNcGC", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
-	ASSERT_EQ("AnNTNNcGC", field.get_value());
+	value = "AnNTNNcGC";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
+	ASSERT_EQ(value, field.get_value());
 
-	ASSERT_TRUE(regex_match(".", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = ".";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
+	ASSERT_EQ("", field.get_value());
 
-	ASSERT_TRUE(regex_match("S", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "S";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
+	ASSERT_EQ("", field.get_value());
 
-	ASSERT_TRUE(regex_match("ABC", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "ABC";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
+	ASSERT_EQ("", field.get_value());
 }
 
 TEST_F(VCFReaderTest, AltField) {
-	regex any_regex("(.*)");
-	cmatch matches;
-
+	const char* value = nullptr;
 	sph_umich_edu::AltField field;
 
-	ASSERT_TRUE(regex_match("", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("A", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "A";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_FALSE(field.is_empty());
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ("A", field.get_values().at(0u));
 
-	ASSERT_TRUE(regex_match("*", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "*";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_FALSE(field.is_empty());
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ("*", field.get_values().at(0u));
 
-	ASSERT_TRUE(regex_match("An*T*NNcGC", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "An*T*NNcGC";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_FALSE(field.is_empty());
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ("An*T*NNcGC", field.get_values().at(0u));
 
-	ASSERT_TRUE(regex_match(".", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = ".";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("..", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "..";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("AT,A,N", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "AT,A,N";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_FALSE(field.is_empty());
 	ASSERT_EQ(3u, field.get_values().size());
 	ASSERT_EQ("AT", field.get_values().at(0u));
 	ASSERT_EQ("A", field.get_values().at(1u));
 	ASSERT_EQ("N", field.get_values().at(2u));
 
-	ASSERT_TRUE(regex_match("A T,A, N", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "A T,A, N";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("AT,,A,N", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "AT,,A,N";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("<ID>", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "<ID>";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_FALSE(field.is_empty());
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ("<ID>", field.get_values().at(0u));
 
-	ASSERT_TRUE(regex_match("<<ID>>", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "<<ID>>";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("< ID >", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "< ID >";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("<ID1:SUBID2>", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "<ID1:SUBID2>";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_FALSE(field.is_empty());
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ("<ID1:SUBID2>", field.get_values().at(0u));
 
-	ASSERT_TRUE(regex_match("<ID1 SUBID2>", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "<ID1 SUBID2>";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("<CN0>,<CN2>", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "<CN0>,<CN2>";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_FALSE(field.is_empty());
 	ASSERT_EQ(2u, field.get_values().size());
 	ASSERT_EQ("<CN0>", field.get_values().at(0u));
@@ -304,283 +268,235 @@ TEST_F(VCFReaderTest, AltField) {
 }
 
 TEST_F(VCFReaderTest, QualField) {
-	regex any_regex("(.*)");
-	cmatch matches;
-
+	const char* value = nullptr;
 	sph_umich_edu::QualField field;
 
-	ASSERT_TRUE(regex_match("", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 
-	ASSERT_TRUE(regex_match(".", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = ".";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_TRUE(std::isnan(field.get_value()));
 
-	ASSERT_TRUE(regex_match("0", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "0";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_FALSE(field.is_empty());
 	ASSERT_FLOAT_EQ(0.0, field.get_value());
 
-	ASSERT_TRUE(regex_match("30", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "30";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_FALSE(field.is_empty());
 	ASSERT_FLOAT_EQ(30.0, field.get_value());
 
-	ASSERT_TRUE(regex_match("-30", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "-30";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 
-	ASSERT_TRUE(regex_match("12.2", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "12.2";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_FALSE(field.is_empty());
 	ASSERT_FLOAT_EQ(12.2, field.get_value());
 
-	ASSERT_TRUE(regex_match("12.0", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "12.0";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_FALSE(field.is_empty());
 	ASSERT_FLOAT_EQ(12.0, field.get_value());
 
-	ASSERT_TRUE(regex_match("0.0", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "0.0";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_FALSE(field.is_empty());
 	ASSERT_FLOAT_EQ(0.0, field.get_value());
 
-	ASSERT_TRUE(regex_match("0.12", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "0.12";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_FALSE(field.is_empty());
 	ASSERT_FLOAT_EQ(0.12, field.get_value());
 
-	ASSERT_TRUE(regex_match(".12", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = ".12";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 
-	ASSERT_TRUE(regex_match("aBc", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "aBc";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 }
 
 TEST_F(VCFReaderTest, FilterField) {
-	regex any_regex("(.*)");
-	cmatch matches;
-
+	const char* value = nullptr;
 	sph_umich_edu::FilterField field;
 
-	ASSERT_TRUE(regex_match("", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_FALSE(field.is_pass());
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match(".", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = ".";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_FALSE(field.is_pass());
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("PASS", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "PASS";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_FALSE(field.is_empty());
 	ASSERT_TRUE(field.is_pass());
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ("PASS", field.get_values().at(0u));
 
-	ASSERT_TRUE(regex_match("some filter", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "some filter";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_FALSE(field.is_pass());
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("filter1;filter2", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "filter1;filter2";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_FALSE(field.is_empty());
 	ASSERT_FALSE(field.is_pass());
 	ASSERT_EQ(2u, field.get_values().size());
 	ASSERT_EQ("filter1", field.get_values().at(0u));
 	ASSERT_EQ("filter2", field.get_values().at(1u));
 
-	ASSERT_TRUE(regex_match("some filter1; some filter2", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "some filter1; some filter2";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_FALSE(field.is_pass());
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("q10;s50", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "q10;s50";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_FALSE(field.is_empty());
 	ASSERT_FALSE(field.is_pass());
 	ASSERT_EQ(2u, field.get_values().size());
 	ASSERT_EQ("q10", field.get_values().at(0u));
 	ASSERT_EQ("s50", field.get_values().at(1u));
 
-	ASSERT_TRUE(regex_match("q10 ; s50", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "q10 ; s50";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_TRUE(field.is_empty());
 	ASSERT_FALSE(field.is_pass());
 	ASSERT_EQ(0u, field.get_values().size());
 }
 
 TEST_F(VCFReaderTest, InfoField) {
-	regex any_regex("(.*)");
-	cmatch matches;
-
+	const char* value = nullptr;
 	sph_umich_edu::InfoField field;
 
-	ASSERT_TRUE(regex_match("", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match(".", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = ".";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("H2", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "H2";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ(1u, field.get_values().count("H2"));
 	ASSERT_EQ("", field.get_values().at("H2"));
 
-	ASSERT_TRUE(regex_match("1000G", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "1000G";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ(1u, field.get_values().count("1000G"));
 	ASSERT_EQ("", field.get_values().at("1000G"));
 
-	ASSERT_TRUE(regex_match("GL.1", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "GL.1";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ(1u, field.get_values().count("GL.1"));
 	ASSERT_EQ("", field.get_values().at("GL.1"));
 
-	ASSERT_TRUE(regex_match(".1", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = ".1";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ(1u, field.get_values().count(".1"));
 	ASSERT_EQ("", field.get_values().at(".1"));
 
-	ASSERT_TRUE(regex_match("H2 1000G", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "H2 1000G";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("H2,1000G", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "H2,1000G";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("H2;1000G", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "H2;1000G";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(2u, field.get_values().size());
 	ASSERT_EQ(1u, field.get_values().count("H2"));
 	ASSERT_EQ(1u, field.get_values().count("1000G"));
 	ASSERT_EQ("", field.get_values().at("H2"));
 	ASSERT_EQ("", field.get_values().at("1000G"));
 
-	ASSERT_TRUE(regex_match("H2;;1000G", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "H2;;1000G";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("H2;1000G;", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "H2;1000G;";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(2u, field.get_values().size());
 	ASSERT_EQ(1u, field.get_values().count("H2"));
 	ASSERT_EQ(1u, field.get_values().count("1000G"));
 	ASSERT_EQ("", field.get_values().at("H2"));
 	ASSERT_EQ("", field.get_values().at("1000G"));
 
-	ASSERT_TRUE(regex_match("H2;1000G;;", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "H2;1000G;;";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("H2; ;1000G", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "H2; ;1000G";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("AF=0.333", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "AF=0.333";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ(1u, field.get_values().count("AF"));
 	ASSERT_EQ("0.333", field.get_values().at("AF"));
 
-	ASSERT_TRUE(regex_match("AF = 0.333", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "AF = 0.333";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("twowords key=0.333", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "twowords key=0.333";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("twowords_key=0.333", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "twowords_key=0.333";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ(1u, field.get_values().count("twowords_key"));
 	ASSERT_EQ("0.333", field.get_values().at("twowords_key"));
 
-	ASSERT_TRUE(regex_match("AA=A=T", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "AA=A=T";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("AF=0.333,0.667", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "AF=0.333,0.667";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ(1u, field.get_values().count("AF"));
 	ASSERT_EQ("0.333,0.667", field.get_values().at("AF"));
 
-	ASSERT_TRUE(regex_match("AF=0.333,,0.667", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "AF=0.333,,0.667";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("AF=0.333,0.667,", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "AF=0.333,0.667,";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("AF=0.333, 0.667", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "AF=0.333, 0.667";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("DP=154;MQ=52;H2", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "DP=154;MQ=52;H2";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(3u, field.get_values().size());
 	ASSERT_EQ(1u, field.get_values().count("DP"));
 	ASSERT_EQ(1u, field.get_values().count("MQ"));
@@ -589,14 +505,12 @@ TEST_F(VCFReaderTest, InfoField) {
 	ASSERT_EQ("52", field.get_values().at("MQ"));
 	ASSERT_EQ("", field.get_values().at("H2"));
 
-	ASSERT_TRUE(regex_match("DP=154; MQ=52 ;H2", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "DP=154; MQ=52 ;H2";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("DP=154;MQ=52;H2;AF=0.333,0.667", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "DP=154;MQ=52;H2;AF=0.333,0.667";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(4u, field.get_values().size());
 	ASSERT_EQ(1u, field.get_values().count("DP"));
 	ASSERT_EQ(1u, field.get_values().count("MQ"));
@@ -607,203 +521,184 @@ TEST_F(VCFReaderTest, InfoField) {
 	ASSERT_EQ("", field.get_values().at("H2"));
 	ASSERT_EQ("0.333,0.667", field.get_values().at("AF"));
 
-	ASSERT_TRUE(regex_match("CADD_RAW=-0.512010;CADD_PHRED=0.205000", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "CADD_RAW=-0.512010;CADD_PHRED=0.205000";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(2u, field.get_values().size());
 	ASSERT_EQ(1u, field.get_values().count("CADD_RAW"));
 	ASSERT_EQ(1u, field.get_values().count("CADD_PHRED"));
 	ASSERT_EQ("-0.512010", field.get_values().at("CADD_RAW"));
 	ASSERT_EQ("0.205000", field.get_values().at("CADD_PHRED"));
 
-	ASSERT_TRUE(regex_match("DP_HIST=133|365|645|904|938|854|678|480|390|237|160|91|51|33|18|8|1|3|4|2,0|0|0|1|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "DP_HIST=133|365|645|904|938|854|678|480|390|237|160|91|51|33|18|8|1|3|4|2,0|0|0|1|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ(1u, field.get_values().count("DP_HIST"));
 	ASSERT_EQ("133|365|645|904|938|854|678|480|390|237|160|91|51|33|18|8|1|3|4|2,0|0|0|1|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0", field.get_values().at("DP_HIST"));
 
-	ASSERT_TRUE(regex_match("CSQ=G|intergenic_variant|MODIFIER||||||||||||||||1||||||||||||||||||||||||||||||||", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "CSQ=G|intergenic_variant|MODIFIER||||||||||||||||1||||||||||||||||||||||||||||||||";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ(1u, field.get_values().count("CSQ"));
 	ASSERT_EQ("G|intergenic_variant|MODIFIER||||||||||||||||1||||||||||||||||||||||||||||||||", field.get_values().at("CSQ"));
 
-	ASSERT_TRUE(regex_match("CSQ=G|intergenic_variant|MODIFIER|||||||||| ||||||1||||||||||| |||||||||||||||||||||", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "CSQ=G|intergenic_variant|MODIFIER|||||||||| ||||||1||||||||||| |||||||||||||||||||||";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 }
 
 TEST_F(VCFReaderTest, FormatField) {
-	regex any_regex("(.*)");
-	cmatch matches;
-
+	const char* value = nullptr;
 	sph_umich_edu::FormatField field;
 
-	ASSERT_TRUE(regex_match("", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 	ASSERT_FALSE(field.has_genotypes());
 
-	ASSERT_TRUE(regex_match(".", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = ".";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 	ASSERT_FALSE(field.has_genotypes());
 
-	ASSERT_TRUE(regex_match("GT", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "GT";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ("GT", field.get_values().at(0u));
 	ASSERT_TRUE(field.has_genotypes());
 
-	ASSERT_TRUE(regex_match("GT:", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "GT:";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 	ASSERT_FALSE(field.has_genotypes());
 
-	ASSERT_TRUE(regex_match("GT:DP", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "GT:DP";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(2u, field.get_values().size());
 	ASSERT_EQ("GT", field.get_values().at(0u));
 	ASSERT_EQ("DP", field.get_values().at(1u));
 	ASSERT_TRUE(field.has_genotypes());
 
-	ASSERT_TRUE(regex_match("DP:GT", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "DP:GT";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 	ASSERT_FALSE(field.has_genotypes());
 
-	ASSERT_TRUE(regex_match("DP:GTA", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "DP:GTA";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(2u, field.get_values().size());
 	ASSERT_EQ("DP", field.get_values().at(0u));
 	ASSERT_EQ("GTA", field.get_values().at(1u));
 	ASSERT_FALSE(field.has_genotypes());
 
-	ASSERT_TRUE(regex_match("DP:AGT", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "DP:AGT";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(2u, field.get_values().size());
 	ASSERT_EQ("DP", field.get_values().at(0u));
 	ASSERT_EQ("AGT", field.get_values().at(1u));
 	ASSERT_FALSE(field.has_genotypes());
 
-	ASSERT_TRUE(regex_match("DP:GT:GL", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "DP:GT:GL";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 	ASSERT_FALSE(field.has_genotypes());
 
-	ASSERT_TRUE(regex_match("DP:GL:GT", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "DP:GL:GT";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 	ASSERT_FALSE(field.has_genotypes());
 
-	ASSERT_TRUE(regex_match("DP:GL:AGT", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "DP:GL:AGT";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(3u, field.get_values().size());
 	ASSERT_EQ("DP", field.get_values().at(0u));
 	ASSERT_EQ("GL", field.get_values().at(1u));
 	ASSERT_EQ("AGT", field.get_values().at(2u));
 	ASSERT_FALSE(field.has_genotypes());
 
-	ASSERT_TRUE(regex_match("DP:GL:GTA", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "DP:GL:GTA";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(3u, field.get_values().size());
 	ASSERT_EQ("DP", field.get_values().at(0u));
 	ASSERT_EQ("GL", field.get_values().at(1u));
 	ASSERT_EQ("GTA", field.get_values().at(2u));
 	ASSERT_FALSE(field.has_genotypes());
 
-	ASSERT_TRUE(regex_match("DP:TG", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "DP:TG";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(2u, field.get_values().size());
 	ASSERT_EQ("DP", field.get_values().at(0u));
 	ASSERT_EQ("TG", field.get_values().at(1u));
 	ASSERT_FALSE(field.has_genotypes());
 
-	ASSERT_TRUE(regex_match("GT::DP", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "GT::DP";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 	ASSERT_FALSE(field.has_genotypes());
 
-	ASSERT_TRUE(regex_match("GT:.:DP", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "GT:.:DP";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 	ASSERT_FALSE(field.has_genotypes());
 }
 
 
 TEST_F(VCFReaderTest, GenotypeField) {
-	regex any_regex("(.*)");
-	cmatch matches;
+	const char* value = nullptr;
 
 	sph_umich_edu::FormatField format;
 	sph_umich_edu::GenotypeField field(format);
 
-	ASSERT_TRUE(regex_match("", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "0";
+	ASSERT_EQ(0ul, sph_umich_edu::GenotypeField::toul_nocheck(value, value + strlen(value)));
+
+	value = "1";
+	ASSERT_EQ(1ul, sph_umich_edu::GenotypeField::toul_nocheck(value, value + strlen(value)));
+
+	value = "10";
+	ASSERT_EQ(10ul, sph_umich_edu::GenotypeField::toul_nocheck(value, value + strlen(value)));
+
+	value = "1234567";
+	ASSERT_EQ(1234567ul, sph_umich_edu::GenotypeField::toul_nocheck(value, value + strlen(value)));
+
+	value = "";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match(".", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = ".";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ(".", field.get_values().at(0u));
 
-	ASSERT_TRUE(regex_match(":", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = ":";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("::", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "::";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match(" : : ", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = " : : ";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match(".:.:.", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = ".:.:.";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(3u, field.get_values().size());
 	ASSERT_EQ(".", field.get_values().at(0u));
 	ASSERT_EQ(".", field.get_values().at(1u));
 	ASSERT_EQ(".", field.get_values().at(2u));
 
-	ASSERT_TRUE(regex_match(".:.:", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = ".:.:";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("0/0", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "0/0";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(1u, field.get_values().size());
 	ASSERT_EQ("0/0", field.get_values().at(0u));
 
-	ASSERT_TRUE(regex_match("0/0:255:62,0:0:0,430,2742", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "0/0:255:62,0:0:0,430,2742";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_EQ(5u, field.get_values().size());
 	ASSERT_EQ("0/0", field.get_values().at(0u));
 	ASSERT_EQ("255", field.get_values().at(1u));
@@ -811,52 +706,45 @@ TEST_F(VCFReaderTest, GenotypeField) {
 	ASSERT_EQ("0", field.get_values().at(3u));
 	ASSERT_EQ("0,430,2742", field.get_values().at(4u));
 
-	ASSERT_TRUE(regex_match("0/0:255:62,0:0:0,430 ,2742", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = "0/0:255:62,0:0:0,430 ,2742";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 	ASSERT_EQ(0u, field.get_values().size());
 
-	ASSERT_TRUE(regex_match("GT:DP", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(format.parse(matches[1]));
+	value = "GT:DP";
+	ASSERT_NO_THROW(format.parse(value, value + strlen(value)));
 	ASSERT_TRUE(format.has_genotypes());
 
-	ASSERT_TRUE(regex_match(".:255", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = ".:255";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_TRUE(field.has_genotypes());
 	ASSERT_TRUE(field.is_phased());
 	ASSERT_TRUE(field.has_missing_alleles());
 	ASSERT_EQ(0u, field.get_alleles().size());
 
-	ASSERT_TRUE(regex_match("./.:255", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "./.:255";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_TRUE(field.has_genotypes());
 	ASSERT_FALSE(field.is_phased());
 	ASSERT_TRUE(field.has_missing_alleles());
 	ASSERT_EQ(0u, field.get_alleles().size());
 
-	ASSERT_TRUE(regex_match(".|.:255", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = ".|.:255";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_TRUE(field.has_genotypes());
 	ASSERT_TRUE(field.is_phased());
 	ASSERT_TRUE(field.has_missing_alleles());
 	ASSERT_EQ(0u, field.get_alleles().size());
 
-	ASSERT_TRUE(regex_match("12:255", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "12:255";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_TRUE(field.has_genotypes());
 	ASSERT_TRUE(field.is_phased());
 	ASSERT_FALSE(field.has_missing_alleles());
 	ASSERT_EQ(1u, field.get_alleles().size());
 	ASSERT_EQ(12u, field.get_alleles().at(0u));
 
-	ASSERT_TRUE(regex_match("0/11:255", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "0/11:255";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_TRUE(field.has_genotypes());
 	ASSERT_FALSE(field.is_phased());
 	ASSERT_FALSE(field.has_missing_alleles());
@@ -864,9 +752,8 @@ TEST_F(VCFReaderTest, GenotypeField) {
 	ASSERT_EQ(0u, field.get_alleles().at(0u));
 	ASSERT_EQ(11u, field.get_alleles().at(1u));
 
-	ASSERT_TRUE(regex_match("11|0:255", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "11|0:255";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_TRUE(field.has_genotypes());
 	ASSERT_TRUE(field.is_phased());
 	ASSERT_FALSE(field.has_missing_alleles());
@@ -874,9 +761,8 @@ TEST_F(VCFReaderTest, GenotypeField) {
 	ASSERT_EQ(11u, field.get_alleles().at(0u));
 	ASSERT_EQ(0u, field.get_alleles().at(1u));
 
-	ASSERT_TRUE(regex_match("0/1/2:255", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "0/1/2:255";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_TRUE(field.has_genotypes());
 	ASSERT_FALSE(field.is_phased());
 	ASSERT_FALSE(field.has_missing_alleles());
@@ -885,9 +771,8 @@ TEST_F(VCFReaderTest, GenotypeField) {
 	ASSERT_EQ(1u, field.get_alleles().at(1u));
 	ASSERT_EQ(2u, field.get_alleles().at(2u));
 
-	ASSERT_TRUE(regex_match("0|1|2:255", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_NO_THROW(field.parse(matches[1]));
+	value = "0|1|2:255";
+	ASSERT_NO_THROW(field.parse(value, value + strlen(value)));
 	ASSERT_TRUE(field.has_genotypes());
 	ASSERT_TRUE(field.is_phased());
 	ASSERT_FALSE(field.has_missing_alleles());
@@ -896,9 +781,29 @@ TEST_F(VCFReaderTest, GenotypeField) {
 	ASSERT_EQ(1u, field.get_alleles().at(1u));
 	ASSERT_EQ(2u, field.get_alleles().at(2u));
 
-	ASSERT_TRUE(regex_match(".|0:255", matches, any_regex));
-	ASSERT_EQ(2u, matches.size());
-	ASSERT_THROW(field.parse(matches[1]), sph_umich_edu::VCFException);
+	value = ".|0:255";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
+
+	value = "0|010|0:255";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
+
+	value = "1|..|1:255";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
+
+	value = "1|.1|1:255";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
+
+	value = "1|1.|1:255";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
+
+	value = "1|1.1|1:255";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
+
+	value = "1|11a|1:255";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
+
+	value = "1|-11|1:255";
+	ASSERT_THROW(field.parse(value, value + strlen(value)), sph_umich_edu::VCFException);
 }
 
 TEST_F(VCFReaderTest, MetaTest) {

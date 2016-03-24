@@ -14,18 +14,22 @@ namespace sph_umich_edu {
 class IdField: public Field {
 private:
 	string text;
-	regex empty_id_regex;
 	regex ids_regex;
-	regex ids_split_regex;
+	const char* token_start;
+	const char* token_end;
+
 
 	bool empty;
 	vector<string> values;
+
+	const sregex_token_iterator send;
 
 public:
 	IdField();
 	virtual ~IdField();
 
-	virtual void parse(const csub_match& text) throw (VCFException);
+	virtual void parse(const char* start, const char* end) throw (VCFException);
+
 	virtual void print() const;
 
 	bool is_empty() const;

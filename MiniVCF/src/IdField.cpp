@@ -3,9 +3,8 @@
 namespace sph_umich_edu {
 
 IdField::IdField() :
-		empty_id_regex("^\\.$"),
-		ids_regex("[a-zA-Z0-9_]+[^\\s;,]*(;[a-zA-Z0-9_]+[^\\s;,]*)*"),
-		ids_split_regex(";"),
+		ids_regex("[a-zA-Z0-9_]+[^\\s;,]*(?:;[a-zA-Z0-9_]+[^\\s;,]*)*", std::regex_constants::optimize),
+		token_start(nullptr), token_end(nullptr),
 		empty(true) {
 
 }
@@ -14,25 +13,36 @@ IdField::~IdField() {
 
 }
 
-void IdField::parse(const csub_match& text) throw (VCFException) {
+void IdField::parse(const char* start, const char* end) throw (VCFException) {
 	empty = true;
 	values.clear();
-	this->text = std::move(text.str());
+	text.assign(start, end);
 
-	if (regex_match(this->text, empty_id_regex)) {
+	if (text.compare(".") == 0) {
 		return;
 	}
 
-	if (!regex_match(this->text, ids_regex)) {
+//	if ((*start == '.') && (end - start == 1)) {
+//		return;
+//	}
+
+	if (!regex_match(text, ids_regex)) {
 		throw VCFException(__FILE__, __FUNCTION__, __LINE__, "Error while parsing ID field.");
 	}
 
-	const sregex_token_iterator end;
-	sregex_token_iterator fields_iter(this->text.begin(), this->text.end(), ids_split_regex, -1);
-	while (fields_iter != end) {
-		values.emplace_back(std::move(fields_iter->str()));
-		++fields_iter;
+	token_start = start;
+	token_end = start;
+
+	while (token_end != end) {
+		if (*token_end == ';') {
+			values.emplace_back(token_start, token_end);
+			token_start = ++token_end;
+		} else {
+			++token_end;
+		}
 	}
+	values.emplace_back(token_start, token_end);
+
 	empty = false;
 }
 

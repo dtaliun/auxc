@@ -13,18 +13,17 @@ FormatField::~FormatField() {
 
 }
 
-void FormatField::parse(const csub_match& text) throw (VCFException) {
+void FormatField::parse(const char* start, const char* end) throw (VCFException) {
 	genotypes = false;
 	values.clear();
-	this->text = std::move(text.str());
+	text.assign(start, end);
 
-	if (!regex_match(this->text, format_regex)) {
+	if (!regex_match(text, format_regex)) {
 		throw VCFException(__FILE__, __FUNCTION__, __LINE__, "Error while parsing FORMAT field.");
 	}
 
-	const sregex_token_iterator end;
-	sregex_token_iterator fields_iter(this->text.begin(), this->text.end(), format_split_regex, -1);
-	while (fields_iter != end) {
+	sregex_token_iterator fields_iter(text.begin(), text.end(), format_split_regex, -1);
+	while (fields_iter != send) {
 		values.emplace_back(std::move(fields_iter->str()));
 		++fields_iter;
 	}

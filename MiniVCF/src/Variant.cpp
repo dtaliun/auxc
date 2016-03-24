@@ -3,8 +3,17 @@
 namespace sph_umich_edu {
 
 Variant::Variant() :
-		field_split_regex("\\t") {
+		token_index(0u), token_start(nullptr), token_end(nullptr) {
 
+	fields.push_back(&chrom);
+	fields.push_back(&pos);
+	fields.push_back(&id);
+	fields.push_back(&ref);
+	fields.push_back(&alt);
+	fields.push_back(&qual);
+	fields.push_back(&filter);
+	fields.push_back(&info);
+	fields.push_back(&format);
 }
 
 Variant::~Variant() {
@@ -27,95 +36,71 @@ void Variant::add_sample(string&& sample) throw (VCFException) {
 	unsigned int index = samples.size();
 	samples.emplace(std::move(sample), index);
 	genotypes.emplace_back(new GenotypeField(format));
+	fields.push_back(genotypes.back().get());
 }
 
 void Variant::parse(const char* text_start, const char* text_end) throw (VCFException) {
-	unsigned int i = 0u;
-	const cregex_token_iterator end;
-	cregex_token_iterator fields_iter(text_start, text_end, field_split_regex, -1);
-	while (fields_iter != end) {
-		switch (i) {
-			case 0u:
-				chrom.parse(*fields_iter);
-				break;
-			case 1u:
-				pos.parse(*fields_iter);
-				break;
-			case 2u:
-				id.parse(*fields_iter);
-				break;
-			case 3u:
-				ref.parse(*fields_iter);
-				break;
-			case 4u:
-				alt.parse(*fields_iter);
-				break;
-			case 5u:
-				qual.parse(*fields_iter);
-				break;
-			case 6u:
-				filter.parse(*fields_iter);
-				break;
-			case 7u:
-				info.parse(*fields_iter);
-				break;
-			case 8u:
-				format.parse(*fields_iter);
-				break;
-			default:
-				try {
-					genotypes.at(i - 9u)->parse(*fields_iter);
-				} catch (std::out_of_range &e) {
-					throw VCFException(__FILE__, __FUNCTION__, __LINE__, "Number of genotype fields does not match number of samples.");
-				}
-				break;
+	token_index = 0u;
+	token_start = text_start;
+	token_end = text_start;
+
+	try {
+		while (token_end != text_end) {
+			if (*token_end == '\t') {
+				fields.at(token_index)->parse(token_start, token_end);
+				token_start = ++token_end;
+				++token_index;
+			} else {
+				++token_end;
+			}
 		}
-		++fields_iter;
-		++i;
+		fields.at(token_index)->parse(token_start, token_end);
+	} catch (std::out_of_range &e) {
+		throw VCFException(__FILE__, __FUNCTION__, __LINE__, "Number of fields does not match header.");
 	}
 }
 
 void Variant::parse_minimal(const char* text_start, const char* text_end) throw (VCFException) {
-	unsigned int i = 0u;
-	const cregex_token_iterator end;
-	cregex_token_iterator fields_iter(text_start, text_end, field_split_regex, -1);
-	while (fields_iter != end) {
-		switch (i) {
-			case 0u:
-				chrom.parse(*fields_iter);
-				break;
-			case 1u:
-				pos.parse(*fields_iter);
-				break;
-			case 2u:
-				break;
-			case 3u:
-				ref.parse(*fields_iter);
-				break;
-			case 4u:
-				alt.parse(*fields_iter);
-				break;
-			case 5u:
-				break;
-			case 6u:
-				filter.parse(*fields_iter);
-				break;
-			case 7u:
-				break;
-			case 8u:
-				format.parse(*fields_iter);
-				break;
-			default:
-				try {
-					genotypes.at(i - 9u)->parse(*fields_iter);
-				} catch (std::out_of_range &e) {
-					throw VCFException(__FILE__, __FUNCTION__, __LINE__, "Number of genotype fields does not match number of samples.");
-				}
-				break;
-		}
-		++fields_iter;
-		++i;
-	}
+//	unsigned int i = 0u;
+//	const cregex_token_iterator end;
+//	cregex_token_iterator fields_iter(text_start, text_end, field_split_regex, -1);
+//	while (fields_iter != end) {
+//		switch (i) {
+//			case 0u:
+//				chrom.parse(*fields_iter);
+//				break;
+//			case 1u:
+//				pos.parse(*fields_iter);
+//				break;
+//			case 2u:
+//				break;
+//			case 3u:
+//				ref.parse(*fields_iter);
+//				break;
+//			case 4u:
+//				alt.parse(*fields_iter);
+//				break;
+//			case 5u:
+//				break;
+//			case 6u:
+//				filter.parse(*fields_iter);
+//				break;
+//			case 7u:
+//				break;
+//			case 8u:
+//				format.parse(*fields_iter);
+//				break;
+//			default:
+//				try {
+//					genotypes.at(i - 9u)->parse(*fields_iter);
+//				} catch (std::out_of_range &e) {
+//					throw VCFException(__FILE__, __FUNCTION__, __LINE__, "Number of genotype fields does not match number of samples.");
+//				}
+//				break;
+//		}
+//		++fields_iter;
+//		++i;
+//	}
 }
 
 unsigned int Variant::get_n_samples() const {

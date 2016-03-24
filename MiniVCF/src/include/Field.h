@@ -19,7 +19,7 @@ public:
 	Field(Field&& field) = delete;
 	Field& operator=(Field&& field) = delete;
 
-	virtual void parse(const csub_match& text) throw (VCFException) = 0;
+	virtual void parse(const char* start, const char* end) = 0;
 	virtual void print() const = 0;
 };
 

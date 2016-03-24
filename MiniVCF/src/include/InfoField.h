@@ -21,11 +21,14 @@ private:
 
 	unordered_map<string, string> values;
 
+	const sregex_token_iterator send;
+
 public:
 	InfoField();
 	virtual ~InfoField();
 
-	virtual void parse(const csub_match& text) throw (VCFException);
+	virtual void parse(const char* start, const char* end) throw (VCFException);
+
 	virtual void print() const;
 
 	const unordered_map<string, string>& get_values() const;

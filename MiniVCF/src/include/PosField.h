@@ -23,7 +23,8 @@ public:
 	PosField();
 	virtual ~PosField();
 
-	virtual void parse(const csub_match& text) throw (VCFException);
+	virtual void parse(const char* start, const char* end) throw (VCFException);
+
 	virtual void print() const;
 
 	long long unsigned int get_value() const;

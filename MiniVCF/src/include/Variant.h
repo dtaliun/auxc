@@ -21,8 +21,6 @@ namespace sph_umich_edu {
 
 class Variant {
 protected:
-	regex field_split_regex;
-
 	ChromField chrom;
 	PosField pos;
 	IdField id;
@@ -35,6 +33,12 @@ protected:
 	vector<unique_ptr<GenotypeField>> genotypes;
 
 	unordered_map<string, unsigned int> samples;
+
+	unsigned int token_index;
+	const char* token_start;
+	const char* token_end;
+
+	vector<Field*> fields;
 
 public:
 	Variant();

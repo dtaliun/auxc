@@ -12,18 +12,21 @@ InfoField::~InfoField() {
 
 }
 
-void InfoField::parse(const csub_match& text) throw (VCFException) {
+void InfoField::parse(const char* start, const char* end) throw (VCFException) {
 	values.clear();
-	this->text = std::move(text.str());
+	text.assign(start, end);
 
-	if (regex_match(this->text, empty_info_regex)) {
+//	if (regex_match(this->text, empty_info_regex)) {
+//		return;
+//	}
+
+	if ((text.length() == 1) && (text[0] == '.')) {
 		return;
 	}
 
-	const sregex_token_iterator end;
 	smatch matches;
-	sregex_token_iterator fields_iter(this->text.begin(), this->text.end(), info_split_regex, -1);
-	while (fields_iter != end) {
+	sregex_token_iterator fields_iter(text.begin(), text.end(), info_split_regex, -1);
+	while (fields_iter != send) {
 		if (!regex_match(fields_iter->first, fields_iter->second, matches, info_keyvalue_regex)) {
 			values.clear();
 			throw VCFException(__FILE__, __FUNCTION__, __LINE__, "Error while parsing INFO field.");
