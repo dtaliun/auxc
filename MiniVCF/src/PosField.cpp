@@ -21,6 +21,10 @@ void PosField::parse(const char* start, const char* end) throw (VCFException) {
 	value = stoull(text, nullptr, 10);
 }
 
+const string& PosField::get_text() const {
+	return text;
+}
+
 long long unsigned int PosField::get_value() const {
 	return value;
 }

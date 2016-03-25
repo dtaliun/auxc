@@ -52,6 +52,10 @@ bool FilterField::is_pass() const {
 	return pass;
 }
 
+const string& FilterField::get_text() const {
+	return text;
+}
+
 const vector<string>& FilterField::get_values() const {
 	return values;
 }

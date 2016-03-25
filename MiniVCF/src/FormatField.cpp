@@ -36,6 +36,10 @@ bool FormatField::has_genotypes() const {
 	return genotypes;
 }
 
+const string& FormatField::get_text() const {
+	return text;
+}
+
 const vector<string>& FormatField::get_values() const {
 	return values;
 }

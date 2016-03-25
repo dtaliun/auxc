@@ -29,6 +29,7 @@ public:
 	virtual void print() const;
 
 	bool is_empty() const;
+	const string& get_text() const;
 	double get_value() const;
 };
 

@@ -19,6 +19,10 @@ void ChromField::parse(const char* start, const char* end) throw (VCFException) 
 	value = text;
 }
 
+const string& ChromField::get_text() const {
+	return text;
+}
+
 const string& ChromField::get_value() const {
 	return value;
 }

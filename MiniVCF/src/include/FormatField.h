@@ -32,6 +32,7 @@ public:
 	virtual void print() const;
 
 	bool has_genotypes() const;
+	const string& get_text() const;
 	const vector<string>& get_values() const;
 };
 

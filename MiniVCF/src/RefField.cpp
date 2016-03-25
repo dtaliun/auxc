@@ -19,6 +19,10 @@ void RefField::parse(const char* start, const char* end) throw (VCFException) {
 	value = text;
 }
 
+const string& RefField::get_text() const {
+	return text;
+}
+
 const string& RefField::get_value() {
 	return value;
 }

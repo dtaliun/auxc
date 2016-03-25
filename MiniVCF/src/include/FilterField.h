@@ -34,6 +34,7 @@ public:
 
 	bool is_empty() const;
 	bool is_pass() const;
+	const string& get_text() const;
 	const vector<string>& get_values() const;
 };
 

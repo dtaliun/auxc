@@ -50,6 +50,10 @@ bool IdField::is_empty() const {
 	return empty;
 }
 
+const string& IdField::get_text() const {
+	return text;
+}
+
 const vector<string>& IdField::get_values() const {
 	return values;
 }

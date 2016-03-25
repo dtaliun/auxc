@@ -34,6 +34,7 @@ public:
 	virtual void print() const;
 
 	bool is_empty() const;
+	const string& get_text() const;
 	const vector<string>& get_values() const;
 };
 

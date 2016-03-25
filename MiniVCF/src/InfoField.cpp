@@ -36,6 +36,10 @@ void InfoField::parse(const char* start, const char* end) throw (VCFException) {
 	}
 }
 
+const string& InfoField::get_text() const {
+	return text;
+}
+
 const unordered_map<string, string>& InfoField::get_values() const {
 	return values;
 }

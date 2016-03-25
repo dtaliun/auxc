@@ -44,6 +44,7 @@ public:
 	bool has_genotypes() const;
 	bool is_phased() const;
 	bool has_missing_alleles() const;
+	const string& get_text() const;
 	const vector<unsigned int>& get_alleles() const;
 
 };

@@ -26,6 +26,7 @@ public:
 
 	virtual void print() const;
 
+	const string& get_text() const;
 	const string& get_value() const;
 };
 

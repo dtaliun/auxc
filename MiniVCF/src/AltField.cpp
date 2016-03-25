@@ -44,6 +44,10 @@ bool AltField::is_empty() const {
 	return empty;
 }
 
+const string& AltField::get_text() const {
+	return text;
+}
+
 const vector<string>& AltField::get_values() const {
 	return values;
 }

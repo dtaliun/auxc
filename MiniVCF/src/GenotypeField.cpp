@@ -187,6 +187,10 @@ bool GenotypeField::has_missing_alleles() const {
 	return missing_alleles;
 }
 
+const string& GenotypeField::get_text() const {
+	return text;
+}
+
 const vector<unsigned int>& GenotypeField::get_alleles() const {
 	return alleles;
 }

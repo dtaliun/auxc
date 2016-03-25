@@ -31,6 +31,7 @@ public:
 
 	virtual void print() const;
 
+	const string& get_text() const;
 	const unordered_map<string, string>& get_values() const;
 };
 

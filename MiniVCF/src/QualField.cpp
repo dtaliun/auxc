@@ -35,6 +35,10 @@ bool QualField::is_empty() const {
 	return empty;
 }
 
+const string& QualField::get_text() const {
+	return text;
+}
+
 double QualField::get_value() const {
 	return value;
 }

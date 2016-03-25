@@ -25,7 +25,7 @@ public:
 	virtual void parse(const char* start, const char* end) throw (VCFException);
 
 	virtual void print() const;
-
+	const string& get_text() const;
 	virtual const string& get_value();
 };
 
